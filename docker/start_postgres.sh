@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "Starting postgres"
 export PGDATA=${PGDATA:=/var/postgres}
 
 if [[ -z "$1" ]]; then

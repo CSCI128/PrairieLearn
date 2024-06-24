@@ -38,4 +38,5 @@ RUN chmod +x /PrairieLearn/docker/init.sh \
     && git config --global safe.directory '*'
 
 HEALTHCHECK CMD curl --fail http://localhost:3000/pl/webhooks/ping || exit 1
+
 CMD /PrairieLearn/docker/init.sh
