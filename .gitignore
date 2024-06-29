@@ -110,3 +110,4 @@ packages/*/coverage
 
 .venv
 volume
+secrets/

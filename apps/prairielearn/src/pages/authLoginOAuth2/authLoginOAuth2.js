@@ -14,6 +14,7 @@ const router = Router();
 /**
   * Need to update to use EntraID stuff
   * Should be pretty similar - it seems to just be yoiking from the config file
+  * - Ok so - azure is actually nativly supported, just not documented :(
   * */
 router.get(
   '/',
