@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo "Starting postgres"
+# we might need to remove this
 export PGDATA=${PGDATA:=/var/postgres}
 
 if [[ -z "$1" ]]; then

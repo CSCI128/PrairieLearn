@@ -67,7 +67,7 @@ import * as lifecycleHooks from './lib/lifecycle-hooks.js';
 import * as load from './lib/load.js';
 import { LocalCache } from './lib/local-cache.js';
 import * as nodeMetrics from './lib/node-metrics.js';
-import { APP_ROOT_PATH, REPOSITORY_ROOT_PATH } from './lib/paths.js';
+import { APP_ROOT_PATH, REPOSITORY_ROOT_PATH, CONFIG_FILE_PATH } from './lib/paths.js';
 import * as serverJobs from './lib/server-jobs.js';
 import { PostgresSessionStore } from './lib/session-store.js';
 import * as socketServer from './lib/socket-server.js';
@@ -2286,6 +2286,11 @@ if (esMain(import.meta) && config.startServer) {
           path.join(REPOSITORY_ROOT_PATH, 'config.json'),
           path.join(APP_ROOT_PATH, 'config.json'),
         ];
+
+        // IF config file path is defined, prefer it
+        if (CONFIG_FILE_PATH !== undefined){
+          configPaths.unshift(CONFIG_FILE_PATH);
+        }
 
         // If a config file was specified on the command line, we'll use that
         // instead of the default locations.

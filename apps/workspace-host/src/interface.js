@@ -33,7 +33,7 @@ import * as workspaceUtils from '@prairielearn/workspace-utils';
 import { makeS3ClientConfig, makeAwsClientConfig } from './lib/aws.js';
 import { config, loadConfig } from './lib/config.js';
 import { parseDockerLogs } from './lib/docker.js';
-import { REPOSITORY_ROOT_PATH, APP_ROOT_PATH } from './lib/paths.js';
+import { REPOSITORY_ROOT_PATH, APP_ROOT_PATH, CONFIG_FILE_PATH } from './lib/paths.js';
 import * as socketServer from './lib/socket-server.js';
 
 const sql = sqldb.loadSqlEquiv(import.meta.url);
@@ -119,6 +119,10 @@ async
         path.join(REPOSITORY_ROOT_PATH, 'config.json'),
         path.join(APP_ROOT_PATH, 'config.json'),
       ];
+
+      if(CONFIG_FILE_PATH !== undefined){
+        configPaths.unshift(CONFIG_FILE_PATH);
+      }
 
       // If a config file was specified on the command line, we'll use that
       // instead of the default locations.

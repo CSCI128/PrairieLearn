@@ -1,11 +1,10 @@
-version: '3.8'
 services:
   pl:
     build:
       context: .
     image: prairielearn/prairielearn:local
     ports:
-      - 3000:3000
+      - "443:443"
     volumes:
       - ../pl-mines-csci128:/course
       - /var/run/docker.sock:/var/run/docker.sock
@@ -13,4 +12,43 @@ services:
     container_name: pl
     environment:
       - HOST_JOBS_DIR=${HOME}/pl_ag_jobs
-      - DEV=true
+      - NODE_ENV=production
+      - CONFIG_FILE_PATH=/run/secrets/pl_config
+      - PGHOST=pl_db
+
+    secrets:
+      - pl_config
+    depends_on:
+      pl_db:
+        condition: service_healthy
+
+  pl_db:
+    image: postgres:16.3-alpine
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=pl_db_usr
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/pg_password
+
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+    secrets:
+      - pg_password
+
+
+
+volumes:
+  postgres-data: 
+
+
+secrets:
+  pl_config:
+    file: ./config.json
+  pg_password:
+    file: ./secrets/pg_password
