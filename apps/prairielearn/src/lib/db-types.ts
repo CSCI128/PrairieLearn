@@ -198,6 +198,7 @@ export const UserSchema = z.object({
 });
 export type User = z.infer<typeof UserSchema>;
 
+// TODO - may need to add stuff here.
 export const QuestionSchema = z.object({
   client_files: z.array(z.string()).nullable(),
   course_id: IdSchema,

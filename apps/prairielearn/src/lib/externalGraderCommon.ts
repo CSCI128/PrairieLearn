@@ -9,6 +9,8 @@ import { contains } from '@prairielearn/path-utils';
 
 import { getRuntimeDirectoryForCourse } from './chunks.js';
 import type { Course, Question, Submission, Variant } from './db-types.js';
+import { questions } from '../tests/helperExam.js';
+import { config } from 'pem';
 
 /**
  * Returns the directory where job files should be written to while running
@@ -36,6 +38,7 @@ export async function buildDirectory(
     await fsPromises.mkdir(path.join(dir, 'serverFilesCourse'));
     await fsPromises.mkdir(path.join(dir, 'tests'));
     await fsPromises.mkdir(path.join(dir, 'student'));
+    await fsPromises.mkdir(path.join(dir, 'config'));
     await fsPromises.mkdir(path.join(dir, 'data'));
 
     // Copy all specified files/directories into serverFilesCourse/
@@ -57,6 +60,11 @@ export async function buildDirectory(
         // Tests might not be specified, only copy them if they exist
         if (err.code !== 'ENOENT') throw err;
       });
+      const configDir = path.join(coursePath, 'questions', question.directory, 'config');
+      await fs.copy(configDir, path.join(dir, 'config')).catch((err) => {
+        if (err.code !== 'ENOENT') throw err;
+      });
+
     }
 
     for (const file of submission.submitted_answer?._files ?? []) {

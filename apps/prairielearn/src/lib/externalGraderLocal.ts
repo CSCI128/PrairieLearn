@@ -85,6 +85,20 @@ export class ExternalGraderLocal {
         }
       }
 
+      if (question.external_grading_entrypoint?.includes('config/run_autograder')) {
+        // Mark the entrypoint as executable if it lives in serverFilesCourse.
+        // If it is living in the docker container then we don't have access to it before
+        // we actually run it.
+        try {
+          await execa('chmod', [
+            '+x',
+            path.join(dir, question.external_grading_entrypoint.slice(6)),
+          ]);
+        } catch (e) {
+          logger.error('Could not make file executable; continuing execution anyways');
+        }
+      }
+
       if (config.externalGradingPullImagesFromDockerHub) {
         try {
           logger.info(`Pulling image ${question.external_grading_image}`);
@@ -112,7 +126,7 @@ export class ExternalGraderLocal {
         Tty: true,
         NetworkDisabled: !question.external_grading_enable_networking,
         HostConfig: {
-          Binds: [`${hostDir}:/grade`],
+          Binds: [`${hostDir}:/grade`], // this should be mounting *everything*
           Memory: (1 << 30) * 2, // 2 GiB
           MemorySwap: (1 << 30) * 2, // same as Memory, so no access to swap
           KernelMemory: 1 << 29, // 512 MiB
