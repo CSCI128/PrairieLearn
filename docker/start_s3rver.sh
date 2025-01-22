@@ -1,6 +1,5 @@
 #!/bin/bash
 
-echo "starting s3ver"
 # exit if s3rver is already running
 PID=$(lsof -i :5000 -t)
 if [ -n "$PID" ]; then
@@ -29,4 +28,3 @@ node_modules/.bin/s3rver --directory ./s3rver --port 5000 --configure-bucket wor
 
 # wait for s3rver to start
 until lsof -i :5000 > /dev/null ; do sleep 1; done
-echo "s3ver has been started"

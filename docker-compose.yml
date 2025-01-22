@@ -9,12 +9,14 @@ services:
       - ../pl-mines-csci128:/course
       - /var/run/docker.sock:/var/run/docker.sock
       - ${HOME}/pl_ag_jobs:/jobs
+      - ${SSH_AUTH_SOCK}:/ssh-agent
     container_name: pl
     environment:
       - HOST_JOBS_DIR=${HOME}/pl_ag_jobs
       - NODE_ENV=production
       - CONFIG_FILE_PATH=/run/secrets/pl_config
       - PGHOST=pl_db
+      - SSH_AUTH_SOCK=/ssh-agent
 
     secrets:
       - pl_config
