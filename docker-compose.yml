@@ -6,17 +6,16 @@ services:
     ports:
       - "443:443"
     volumes:
-      - ../pl-mines-csci128:/course
+      - course-data:/data1/courses
       - /var/run/docker.sock:/var/run/docker.sock
       - ${HOME}/pl_ag_jobs:/jobs
-      - ${SSH_AUTH_SOCK}:/ssh-agent
+      - ./secrets/ssh/:/root/.ssh
     container_name: pl
     environment:
       - HOST_JOBS_DIR=${HOME}/pl_ag_jobs
       - NODE_ENV=production
       - CONFIG_FILE_PATH=/run/secrets/pl_config
       - PGHOST=pl_db
-      - SSH_AUTH_SOCK=/ssh-agent
 
     secrets:
       - pl_config
@@ -47,6 +46,7 @@ services:
 
 volumes:
   postgres-data: 
+  course-data:
 
 
 secrets:
