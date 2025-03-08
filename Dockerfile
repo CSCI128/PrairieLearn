@@ -26,17 +26,12 @@ RUN chmod +x /PrairieLearn/docker/init.sh \
     && mkdir /course{,{2..9}} \
     && mkdir -p /workspace_{main,host}_zips \
     && mkdir -p /jobs \
-#    && /PrairieLearn/docker/start_postgres.sh \
     && cd /PrairieLearn \
     && make build \
-#    && node apps/prairielearn/dist/server.js --migrate-and-exit \
-#    && su postgres -c "createuser -s root" \
-#    && /PrairieLearn/docker/start_postgres.sh stop \
     && /PrairieLearn/docker/gen_ssl.sh \
-    && git config --global user.email "dev@example.com" \
-    && git config --global user.name "Dev User" \
+    && git config --global user.email "pl@mines.edu" \
+    && git config --global user.name "PrairieLearn Server" \
     && git config --global safe.directory '*'
 
-HEALTHCHECK CMD curl --fail http://localhost:3000/pl/webhooks/ping || exit 1
 
 CMD /PrairieLearn/docker/init.sh
