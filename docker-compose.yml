@@ -3,12 +3,16 @@ services:
     build:
       context: .
     image: prairielearn/prairielearn:local
+    working_dir: "/PrairieLearn"
+    command: 
+      - make
+      - migrate
+      - start
     volumes:
       - course-data:/data1/courses
       - /var/run/docker.sock:/var/run/docker.sock
       - ${HOME}/pl_ag_jobs:/jobs
       - ./secrets/ssh/:/root/.ssh
-    container_name: pl
     environment:
       - HOST_JOBS_DIR=${HOME}/pl_ag_jobs
       - NODE_ENV=production
@@ -31,10 +35,13 @@ services:
     networks:
       - internal
       - external
+    deploy:
+      mode: replicated
+      replicas: 2
 
   redis:
     image: redis:alpine
-    command: --save 60 1 --loglevel warning
+    command: --save 60 1 --loglevel debug
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
@@ -77,6 +84,9 @@ services:
       - "80:80"
     networks:
       - external
+    depends_on:
+      pl:
+        condition: service_healthy
 
 
 volumes:
